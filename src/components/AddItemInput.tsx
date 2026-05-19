@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 type AddItemInputProps = {
-    onAddItem: (name: string) => void;
+    onAddItem: (title: string) => Promise<void>;
 };
 
 function AddItemInput(props: AddItemInputProps) {
@@ -18,20 +18,20 @@ function AddItemInput(props: AddItemInputProps) {
     };
 
     return (
-        <div className="flex gap-2 p-2">
+        <div className="flex gap-2 items-center mb-4">
             <input
                 type="text"
-                placeholder="Add item..."
+                placeholder="Add new item"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {if (e.key == "Enter") onSubmit() }}
-                className="flex-1 border rounded px-3 py-2"
-                />
+                onKeyDown={(e) => { if (e.key === "Enter") onSubmit() }}
+                className="flex-1 border-b border-gray-300 px-2 py-2 outline-none text-base"
+            />
             <button
                 onClick={onSubmit}
-                className="bg-blue-500 text-white px-4 py-2 rounded"    
+                className="w-10 h-10 rounded-xl bg-gray-700 text-white flex items-center justify-center text-xl hover:bg-gray-900"
             >
-                Add
+            +
             </button>
         </div>
     );
