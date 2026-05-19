@@ -60,11 +60,14 @@ function App() {
     );
   };
 
+  const remainingCount = items.filter(item => !item.completed).length;
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Your List</h1>
       <AddItemInput onAddItem={onAddItem} />
-      <ItemList items={items} onToggleItem={onToggleItem} onDeleteItem={onDeleteItem} onEditItem={onEditItem}   />
+      <ItemList items={items} onToggleItem={onToggleItem} onDeleteItem={onDeleteItem} onEditItem={onEditItem} />
+      <p className="mt-4 text-sm text-black-400 font-bold italic">Remaining item{remainingCount !== 1 ? "s" : ""}: {remainingCount}</p>
     </div>
   );
 }
