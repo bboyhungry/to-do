@@ -7,14 +7,15 @@ import ItemList from "./components/ItemList";
 function App() {
 
   const [items, setItems] = useState<Item[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTasks = async () => {
       const res = await fetch("http://localhost:5017/api/tasks");
       const data = await res.json();
       setItems(data);
+      setLoading(false);
     }
-
     fetchTasks();
   }, []);
 
@@ -62,6 +63,10 @@ function App() {
 
   const remainingCount = items.filter(item => !item.completed).length;
 
+  if (loading) {
+    return <p className="text-center mt-8 text-gray-400">Loading...</p>;
+  }
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Your List</h1>
@@ -72,4 +77,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
