@@ -66,7 +66,7 @@ function App() {
   if (loading) {
     return <p className="text-center mt-8 text-gray-400">Loading...</p>;
   }
-
+  
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Your List</h1>
