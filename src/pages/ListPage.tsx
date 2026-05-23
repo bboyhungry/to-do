@@ -4,8 +4,7 @@ import type { Item } from "../types/ItemType";
 import ItemList from "../components/ItemList";
 import { supabase } from "../supabase";
 import { useNavigate } from "react-router-dom";
-
-
+import { ENV } from "../config";
 
 function ListPage() {
 
@@ -30,7 +29,7 @@ function ListPage() {
   useEffect(() => {
     const fetchTasks = async () => {
       const headers = await getAuthHeaders();
-      const res = await fetch("http://localhost:5017/api/tasks", { headers });
+      const res = await fetch(`${ENV.API_BASE_URL}/api/tasks`, { headers });
       const data = await res.json();
       setItems(data);
       setLoading(false);
@@ -40,7 +39,7 @@ function ListPage() {
 
   const onAddItem = async (title: string) => {
     const headers = await getAuthHeaders();
-    const res = await fetch("http://localhost:5017/api/tasks", {
+    const res = await fetch(`${ENV.API_BASE_URL}/api/tasks`, {
       method: "POST",
       headers,
       body: JSON.stringify({title, completed: false }),
@@ -52,7 +51,7 @@ function ListPage() {
 
   const onDeleteItem = async (id: number) => {
     const headers = await getAuthHeaders();
-    await fetch(`http://localhost:5017/api/tasks/${id}`, {
+    await fetch(`${ENV.API_BASE_URL}/api/tasks/${id}`, {
       method: "DELETE",
       headers,
     });
@@ -61,7 +60,7 @@ function ListPage() {
 
   const onToggleItem = async (id: number, completed: boolean) => {
     const headers = await getAuthHeaders();
-    await fetch(`http://localhost:5017/api/tasks/${id}`, {
+    await fetch(`${ENV.API_BASE_URL}/api/tasks/${id}`, {
       method: "PATCH",
       headers,
       body: JSON.stringify({ completed: !completed }),
@@ -73,7 +72,7 @@ function ListPage() {
 
   const onEditItem = async (id: number, title: string) => {
     const headers = await getAuthHeaders();
-    await fetch(`http://localhost:5017/api/tasks/${id}`, {
+    await fetch(`${ENV.API_BASE_URL}/api/tasks/${id}`, {
       method: "PATCH",
       headers,
       body: JSON.stringify({ title }),
