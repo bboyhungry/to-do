@@ -22,7 +22,7 @@ function LoginPage() {
                 </div>
                 <button
                     onClick={signInWithGoogle}
-                    className="flex items-center gap-3 w-full px-4 py-2 border border-gray-200 rounded-xl hover:bg-gray-50"
+                    className="flex items-center gap-3 w-full px-4 py-2 border border-gray-200 rounded-xl hover:bg-gray-50 cursor-pointer"
                 >
                     <FcGoogle size={20} />
                     Sign in with Google

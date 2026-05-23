@@ -29,7 +29,7 @@ function AddItemInput(props: AddItemInputProps) {
             />
             <button
                 onClick={onSubmit}
-                className="w-10 h-10 rounded-xl bg-gray-700 text-white flex items-center justify-center text-xl hover:bg-gray-900"
+                className="w-10 h-10 rounded-xl bg-gray-700 text-white flex items-center justify-center text-xl hover:bg-gray-900 cursor-pointer"
             >
             +
             </button>

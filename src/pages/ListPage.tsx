@@ -28,11 +28,24 @@ function ListPage() {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const headers = await getAuthHeaders();
-      const res = await fetch(`${ENV.API_BASE_URL}/api/tasks`, { headers });
-      const data = await res.json();
-      setItems(data);
-      setLoading(false);
+      try {
+        const headers = await getAuthHeaders();
+        const res = await fetch(`${ENV.API_BASE_URL}/api/tasks`, { headers });
+        if (!res.ok) {
+          if (res.status === 401) {
+            await supabase.auth.signOut(); 
+            navigate("/");
+            return;
+          }
+          throw new Error(`Server responded with status: ${res.status}`);
+        }
+        const data = await res.json();
+        setItems(data);
+      } catch (error) {
+        console.error("Failed to fetch tasks: ", error);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchTasks();
   }, []);
@@ -94,7 +107,7 @@ function ListPage() {
         <h1 className="text-lg font-bold">Check List</h1>
         <button
           onClick={onLogout}
-          className="text-sm text-gray-500 hover:text-gray-800 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 transition"
+          className="text-sm text-gray-500 hover:text-gray-800 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 transition cursor-pointer"
         >
           Sign out
         </button>
