@@ -2,16 +2,36 @@ import { useState, useEffect } from "react";
 import AddItemInput from "../components/AddItemInput";
 import type { Item } from "../types/ItemType";
 import ItemList from "../components/ItemList";
+import { supabase } from "../supabase";
+import { useNavigate } from "react-router-dom";
+
 
 
 function ListPage() {
 
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  const getAuthHeaders = async () => {
+    const { data } = await supabase.auth.getSession();
+    const token = data.session?.access_token;
+    return {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+  };
+
+  const onLogout = async () => {
+    await supabase.auth.signOut();
+    console.log("Signed out, navigating...");
+    navigate("/");
+  };
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const res = await fetch("http://localhost:5017/api/tasks");
+      const headers = await getAuthHeaders();
+      const res = await fetch("http://localhost:5017/api/tasks", { headers });
       const data = await res.json();
       setItems(data);
       setLoading(false);
@@ -20,11 +40,10 @@ function ListPage() {
   }, []);
 
   const onAddItem = async (title: string) => {
+    const headers = await getAuthHeaders();
     const res = await fetch("http://localhost:5017/api/tasks", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify({title, completed: false }),
     });
 
@@ -33,16 +52,19 @@ function ListPage() {
   }
 
   const onDeleteItem = async (id: number) => {
+    const headers = await getAuthHeaders();
     await fetch(`http://localhost:5017/api/tasks/${id}`, {
       method: "DELETE",
+      headers,
     });
     setItems((prev) => prev.filter((item) => item.id !== id));
   };
 
   const onToggleItem = async (id: number, completed: boolean) => {
+    const headers = await getAuthHeaders();
     await fetch(`http://localhost:5017/api/tasks/${id}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ completed: !completed }),
     });
     setItems((prev) =>
@@ -51,9 +73,10 @@ function ListPage() {
   };
 
   const onEditItem = async (id: number, title: string) => {
+    const headers = await getAuthHeaders();
     await fetch(`http://localhost:5017/api/tasks/${id}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ title }),
     });
     setItems((prev) =>
@@ -68,11 +91,22 @@ function ListPage() {
   }
   
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Your List</h1>
-      <AddItemInput onAddItem={onAddItem} />
-      <ItemList items={items} onToggleItem={onToggleItem} onDeleteItem={onDeleteItem} onEditItem={onEditItem} />
-      <p className="mt-4 text-sm text-black-400 font-bold italic">Remaining item{remainingCount !== 1 ? "s" : ""}: {remainingCount}</p>
+      <div className="min-h-screen bg-gray-50">
+      <nav className="bg-gray border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+        <h1 className="text-lg font-bold">Check List</h1>
+        <button
+          onClick={onLogout}
+          className="text-sm text-gray-500 hover:text-gray-800 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 transition"
+        >
+          Sign out
+        </button>
+      </nav>
+        <div className="max-w-2xl mx-auto px-4 py-8">
+          <h1 className="text-3xl font-bold mb-6">Your List</h1>
+          <AddItemInput onAddItem={onAddItem} />
+          <ItemList items={items} onToggleItem={onToggleItem} onDeleteItem={onDeleteItem} onEditItem={onEditItem} />
+          <p className="mt-4 text-sm text-black-400 font-bold italic">Remaining item{remainingCount !== 1 ? "s" : ""}: {remainingCount}</p>
+        </div>
     </div>
   );
 }
