@@ -6,7 +6,7 @@ function AuthCallback() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        supabase.auth.onAuthStateChange((session) => {
+        supabase.auth.onAuthStateChange((_event, session) => {
             if (session) navigate('/tasks')
         })
     }, [])
