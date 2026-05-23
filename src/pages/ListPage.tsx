@@ -24,7 +24,6 @@ function ListPage() {
 
   const onLogout = async () => {
     await supabase.auth.signOut();
-    console.log("Signed out, navigating...");
     navigate("/");
   };
 
