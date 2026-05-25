@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { supabase } from "../supabase";
+import Spinner from "../components/Spinner"
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
@@ -15,7 +16,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
   
-  if (loading) return <p className="text-center mt-8 text-gray-400">Loading...</p>;
+  if (loading) return <Spinner />;
   if (!authenticated) return <Navigate to="/" replace />;
 
   return <>{children}</>;

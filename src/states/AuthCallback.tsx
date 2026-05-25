@@ -1,6 +1,8 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { supabase } from '../supabase'
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabase';
+import Spinner from "../components/Spinner";
+
 
 function AuthCallback() {
     const navigate = useNavigate()
@@ -11,7 +13,7 @@ function AuthCallback() {
         })
     }, [])
 
-    return <p>Signing you in...</p>
+    return <Spinner />;
 }
 
 export default AuthCallback

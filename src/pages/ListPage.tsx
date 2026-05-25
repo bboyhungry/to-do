@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import AddItemInput from "../components/AddItemInput";
 import type { Item } from "../types/ItemType";
-import ItemList from "../components/ItemList";
 import { supabase } from "../supabase";
 import { useNavigate } from "react-router-dom";
 import { ENV } from "../config";
+import Spinner from "../components/Spinner";
+import ItemList from "../components/ItemList";
+import AddItemInput from "../components/AddItemInput";
 
 function ListPage() {
 
@@ -48,7 +49,7 @@ function ListPage() {
       }
     }
     fetchTasks();
-  }, []);
+  }, [navigate]);
 
   const onAddItem = async (title: string) => {
     const headers = await getAuthHeaders();
@@ -97,13 +98,12 @@ function ListPage() {
 
   const remainingCount = items.filter(item => !item.completed).length;
 
-  if (loading) {
-    return <p className="text-center mt-8 text-gray-400">Loading...</p>;
-  }
+  if (loading) return <Spinner />;
+
   
   return (
       <div className="min-h-screen bg-gray-50">
-      <nav className="bg-gray border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+      <nav className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <h1 className="text-lg font-bold">Check List</h1>
         <button
           onClick={onLogout}
