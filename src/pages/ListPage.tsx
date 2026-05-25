@@ -7,9 +7,6 @@ import Spinner from "../components/Spinner";
 import ItemList from "../components/ItemList";
 import AddItemInput from "../components/AddItemInput";
 
-
-
-
 function ListPage() {
 
   const [items, setItems] = useState<Item[]>([]);
@@ -52,7 +49,7 @@ function ListPage() {
       }
     }
     fetchTasks();
-  }, []);
+  }, [navigate]);
 
   const onAddItem = async (title: string) => {
     const headers = await getAuthHeaders();

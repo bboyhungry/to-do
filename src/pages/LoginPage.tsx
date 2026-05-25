@@ -17,7 +17,7 @@ function LoginPage() {
             if (data.session) navigate('/tasks', { replace: true });
         }
         checkSession();
-    }, [])
+    }, [navigate]);
 
     const signInWithGoogle = async () => {
         const { error } = await supabase.auth.signInWithOAuth({
@@ -94,7 +94,7 @@ function LoginPage() {
                     placeholder="your@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter') sendMagicLink() }}
+                    onKeyDown={(e) => { if (e.key === 'Enter' && !loading) sendMagicLink() }}
                     className="w-full border border-gray-200 rounded-xl px-4 py-2 outline-none text-sm focus:border-gray-400"
                 />
                 <button
