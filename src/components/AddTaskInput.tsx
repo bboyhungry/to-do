@@ -1,19 +1,19 @@
 import { useState } from "react";
 
-type AddItemInputProps = {
-    onAddItem: (title: string) => Promise<void>;
+type AddTaskInputProps = {
+    onAddTask: (title: string) => Promise<void>;
 };
 
-function AddItemInput(props: AddItemInputProps) {
+function AddTaskInput(props: AddTaskInputProps) {
 
     const [input, setInput] = useState("");
 
-    const { onAddItem } = props;
+    const { onAddTask } = props;
 
     const onSubmit = () => {
         const trimmed = input.trim();
         if (!trimmed) return;
-        onAddItem(trimmed);
+        onAddTask(trimmed);
         setInput("");
     };
 
@@ -21,7 +21,7 @@ function AddItemInput(props: AddItemInputProps) {
         <div className="flex gap-2 items-center mb-4">
             <input
                 type="text"
-                placeholder="Add new item"
+                placeholder="Add new task"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter") onSubmit() }}
@@ -37,4 +37,4 @@ function AddItemInput(props: AddItemInputProps) {
     );
 }
 
-export default AddItemInput;
+export default AddTaskInput;

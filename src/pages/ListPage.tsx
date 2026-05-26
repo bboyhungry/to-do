@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
-import type { Item } from "../types/ItemType";
+import type { Task } from "../types/TaskType";
 import { supabase } from "../supabase";
 import { useNavigate } from "react-router-dom";
 import { ENV } from "../config";
 import Spinner from "../components/Spinner";
-import ItemList from "../components/ItemList";
-import AddItemInput from "../components/AddItemInput";
+import TaskList from "../components/TaskList";
+import AddTaskInput from "../components/AddTaskInput";
 
 function ListPage() {
 
-  const [items, setItems] = useState<Item[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -34,14 +34,14 @@ function ListPage() {
         const res = await fetch(`${ENV.API_BASE_URL}/api/tasks`, { headers });
         if (!res.ok) {
           if (res.status === 401) {
-            await supabase.auth.signOut(); 
+            await supabase.auth.signOut();
             navigate("/");
             return;
           }
           throw new Error(`Server responded with status: ${res.status}`);
         }
         const data = await res.json();
-        setItems(data);
+        setTasks(data);
       } catch (error) {
         console.error("Failed to fetch tasks: ", error);
       } finally {
@@ -51,58 +51,57 @@ function ListPage() {
     fetchTasks();
   }, [navigate]);
 
-  const onAddItem = async (title: string) => {
+  const onAddTask = async (title: string) => {
     const headers = await getAuthHeaders();
     const res = await fetch(`${ENV.API_BASE_URL}/api/tasks`, {
       method: "POST",
       headers,
-      body: JSON.stringify({title, completed: false }),
+      body: JSON.stringify({ title, completed: false }),
     });
 
-    const newItem = await res.json();
-    setItems((prev) => [newItem, ...prev])
+    const newTask = await res.json();
+    setTasks((prev) => [newTask, ...prev]);
   }
 
-  const onDeleteItem = async (id: number) => {
+  const onDeleteTask = async (id: number) => {
     const headers = await getAuthHeaders();
     await fetch(`${ENV.API_BASE_URL}/api/tasks/${id}`, {
       method: "DELETE",
       headers,
     });
-    setItems((prev) => prev.filter((item) => item.id !== id));
+    setTasks((prev) => prev.filter((task) => task.id !== id));
   };
 
-  const onToggleItem = async (id: number, completed: boolean) => {
+  const onToggleTask = async (id: number, completed: boolean) => {
     const headers = await getAuthHeaders();
     await fetch(`${ENV.API_BASE_URL}/api/tasks/${id}`, {
       method: "PATCH",
       headers,
       body: JSON.stringify({ completed: !completed }),
     });
-    setItems((prev) =>
-      prev.map((i) => i.id === id ? { ...i, completed: !completed } : i)
+    setTasks((prev) =>
+      prev.map((t) => t.id === id ? { ...t, completed: !completed } : t)
     );
   };
 
-  const onEditItem = async (id: number, title: string) => {
+  const onEditTask = async (id: number, title: string) => {
     const headers = await getAuthHeaders();
     await fetch(`${ENV.API_BASE_URL}/api/tasks/${id}`, {
       method: "PATCH",
       headers,
       body: JSON.stringify({ title }),
     });
-    setItems((prev) =>
-      prev.map((item) => item.id === id ? { ...item, title } : item)
+    setTasks((prev) =>
+      prev.map((task) => task.id === id ? { ...task, title } : task)
     );
   };
 
-  const remainingCount = items.filter(item => !item.completed).length;
+  const remainingCount = tasks.filter(task => !task.completed).length;
 
   if (loading) return <Spinner />;
 
-  
   return (
-      <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <nav className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <h1 className="text-lg font-bold">Check List</h1>
         <button
@@ -112,12 +111,12 @@ function ListPage() {
           Sign out
         </button>
       </nav>
-        <div className="max-w-2xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-6">Your List</h1>
-          <AddItemInput onAddItem={onAddItem} />
-          <ItemList items={items} onToggleItem={onToggleItem} onDeleteItem={onDeleteItem} onEditItem={onEditItem} />
-          <p className="mt-4 text-sm text-black-400 font-bold italic">Remaining item{remainingCount !== 1 ? "s" : ""}: {remainingCount}</p>
-        </div>
+      <div className="max-w-2xl mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-6">Your List</h1>
+        <AddTaskInput onAddTask={onAddTask} />
+        <TaskList tasks={tasks} onToggleTask={onToggleTask} onDeleteTask={onDeleteTask} onEditTask={onEditTask} />
+        <p className="mt-4 text-sm text-black-400 font-bold italic">Remaining task{remainingCount !== 1 ? "s" : ""}: {remainingCount}</p>
+      </div>
     </div>
   );
 }

@@ -1,76 +1,76 @@
 import { useState } from "react";
-import type { Item } from "../types/ItemType";
+import type { Task } from "../types/TaskType";
 
-type ItemListProps = {
-    items: Item[];
-    onDeleteItem: (id: number) => Promise<void>;
-    onToggleItem: (id: number, completed: boolean) => Promise<void>;
-    onEditItem: (id: number, title: string) => Promise<void>;
+type TaskListProps = {
+    tasks: Task[];
+    onDeleteTask: (id: number) => Promise<void>;
+    onToggleTask: (id: number, completed: boolean) => Promise<void>;
+    onEditTask: (id: number, title: string) => Promise<void>;
 }
 
-function ItemList(props: ItemListProps){
+function TaskList(props: TaskListProps){
 
-    const { items, onDeleteItem, onToggleItem, onEditItem  } = props;
+    const { tasks, onDeleteTask, onToggleTask, onEditTask } = props;
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editingTitle, setEditingTitle] = useState("");
 
-    const onClickTitle = (item: Item) => {
-        if (item.completed) return;
-        setEditingId(item.id);
-        setEditingTitle(item.title);
+    const onClickTitle = (task: Task) => {
+        if (task.completed) return;
+        setEditingId(task.id);
+        setEditingTitle(task.title);
     }
 
     const onSave = async (id: number) => {
         if (editingTitle.trim() === "") return;
-        await onEditItem(id, editingTitle);
+        await onEditTask(id, editingTitle);
         setEditingId(null);
     };
 
-    if (items.length === 0) {
+    if (tasks.length === 0) {
         return (
             <div className="mt-4 text-gray-400 text-sm">
-                No Items yet
+                No tasks yet
             </div>
         );
     }
 
     return (
     <div className="flex flex-col gap-3">
-        {items.map((item) => (
+        {tasks.map((task) => (
         <div
-            key={item.id}
-            onClick={() => onClickTitle(item)}
+            key={task.id}
+            onClick={() => onClickTitle(task)}
             className="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-2xl"
         >
             <div className="flex items-center gap-3">
             <input
                 type="checkbox"
-                checked={item.completed}
-                onChange={() => onToggleItem(item.id, item.completed)}
+                checked={task.completed}
+                onChange={() => onToggleTask(task.id, task.completed)}
                 onClick={(e) => e.stopPropagation()}
                 className="w-5 h-5 rounded border-gray-300"
             />
-            {editingId === item.id ? (
+            {editingId === task.id ? (
                 <input
                     type="text"
                     value={editingTitle}
                     onChange={(e) => setEditingTitle(e.target.value)}
-                    onBlur={() => onSave(item.id)}
-                    onKeyDown={(e) => { if (e.key === "Enter") onSave(item.id) }}
+                    onBlur={() => onSave(task.id)}
+                    onKeyDown={(e) => { if (e.key === "Enter") onSave(task.id) }}
                     onClick={(e) => e.stopPropagation()}
                     className="border-b border-gray-300 outline-none"
                     autoFocus
                 />
             ) : (
                 <span
-                    className={item.completed ? "line-through text-gray-400" : ""}
+                    className={task.completed ? "line-through text-gray-400" : ""}
                 >
-                    {item.title}
+                    {task.title}
                 </span>
             )}
             </div>
             <button
-                onClick={(e) => { e.stopPropagation(); onDeleteItem(item.id); }}
+                onClick={(e) => { e.stopPropagation(); onDeleteTask(task.id); }}
                 className="text-gray-400 hover:text-red-500 text-lg"
             >✕
             </button>
@@ -80,4 +80,4 @@ function ItemList(props: ItemListProps){
     );
 }
 
-export default ItemList;
+export default TaskList;
