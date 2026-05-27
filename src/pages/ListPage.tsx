@@ -112,7 +112,6 @@ function ListPage() {
         </button>
       </nav>
       <div className="max-w-2xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">Your List</h1>
         <AddTaskInput onAddTask={onAddTask} />
         <TaskList tasks={tasks} onToggleTask={onToggleTask} onDeleteTask={onDeleteTask} onEditTask={onEditTask} />
         <p className="mt-4 text-sm text-black-400 font-bold italic">Remaining task{remainingCount !== 1 ? "s" : ""}: {remainingCount}</p>
