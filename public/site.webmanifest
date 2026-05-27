@@ -1,0 +1,14 @@
+{
+  "name": "Check List",
+  "short_name": "Check List",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#0f172a",
+  "background_color": "#f9fafb",
+  "display": "standalone"
+}

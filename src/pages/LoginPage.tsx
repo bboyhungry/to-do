@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { supabase } from '../supabase';
+import Footer from '../components/Footer';
 
 function LoginPage() {
 
@@ -51,26 +52,30 @@ function LoginPage() {
 
     if (sent) {
         return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-            <div className="bg-white border border-gray-200 rounded-2xl p-10 w-80 flex flex-col items-center gap-4 text-center">
-            <h1 className="text-2xl font-bold">Check your email</h1>
-            <p className="text-gray-400 text-sm">
-                We sent a sign-in link to{' '}
-                <span className="text-gray-700 font-medium">{email}</span>
-            </p>
-            <button
-                onClick={() => setSent(false)}
-                className="text-xs text-gray-400 hover:text-gray-600 underline cursor-pointer"
-            >
-                Use a different email
-            </button>
+        <div className="min-h-screen flex flex-col bg-gray-50">
+            <div className="flex-1 flex items-center justify-center">
+                <div className="bg-white border border-gray-200 rounded-2xl p-10 w-80 flex flex-col items-center gap-4 text-center">
+                    <h1 className="text-2xl font-bold">Check your email</h1>
+                    <p className="text-gray-400 text-sm">
+                        We sent a sign-in link to{' '}
+                        <span className="text-gray-700 font-medium">{email}</span>
+                    </p>
+                    <button
+                        onClick={() => setSent(false)}
+                        className="text-xs text-gray-400 hover:text-gray-600 underline cursor-pointer"
+                    >
+                        Use a different email
+                    </button>
+                </div>
             </div>
+            <Footer />
         </div>
         );
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="min-h-screen flex flex-col bg-gray-50">
+            <div className="flex-1 flex items-center justify-center">
             <div className="bg-white border border-gray-200 rounded-2xl p-10 w-80 flex flex-col items-center gap-6">
                 <div className="text-center">
                 <h1 className="text-2xl font-bold mb-2">Check List</h1>
@@ -108,7 +113,9 @@ function LoginPage() {
                     <p className="text-xs text-gray-400 text-center">
                         Your items are private and only visible to you
                     </p>
+                </div>
             </div>
+            <Footer />
         </div>
     );
 }
